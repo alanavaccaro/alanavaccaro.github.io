@@ -1,4 +1,4 @@
-const LETTERS = ['A', 'B', 'C', 'D']
+const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
 
 export default function MultiChoice({ options, value, onChange }) {
   return (

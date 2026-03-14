@@ -4,7 +4,50 @@ import ProgressBar from './components/ProgressBar'
 import Step from './components/Step'
 import ThankYou from './components/ThankYou'
 
-const TOTAL = QUESTIONS.length
+// Returns the index of the next visible question after `from`
+function getNextIndex(from, answers) {
+  for (let i = from + 1; i < QUESTIONS.length; i++) {
+    const q = QUESTIONS[i]
+    if (!q.condition || q.condition(answers)) return i
+  }
+  return from
+}
+
+// Returns the index of the previous visible question before `from`
+function getPrevIndex(from, answers) {
+  for (let i = from - 1; i >= 0; i--) {
+    const q = QUESTIONS[i]
+    if (!q.condition || q.condition(answers)) return i
+  }
+  return from
+}
+
+// Count of visible questions (for progress bar)
+function getVisibleCount(answers) {
+  return QUESTIONS.filter((q) => !q.condition || q.condition(answers)).length
+}
+
+// 1-based position of index within visible questions
+function getVisiblePosition(index, answers) {
+  let pos = 0
+  for (let i = 0; i <= index; i++) {
+    const q = QUESTIONS[i]
+    if (!q.condition || q.condition(answers)) pos++
+  }
+  return pos
+}
+
+function canAdvanceQuestion(question, answers) {
+  if (question.type === 'welcome') return true
+  if (question.type === 'multi') {
+    return question.fields
+      .filter((f) => !f.optional)
+      .every((f) => answers[f.id] && answers[f.id].trim() !== '')
+  }
+  if (question.optional) return true
+  const val = answers[question.id]
+  return val !== undefined && val !== null && val !== ''
+}
 
 export default function App() {
   const [current, setCurrent] = useState(0)
@@ -15,36 +58,44 @@ export default function App() {
   const [error, setError] = useState(null)
 
   const question = QUESTIONS[current]
-  const answer = answers[question?.id] ?? ''
-  const isLast = current === TOTAL - 1
+  const nextIndex = getNextIndex(current, answers)
+  const isLast = nextIndex === current
+  const canAdvance = canAdvanceQuestion(question, answers)
 
-  const canAdvance =
-    question?.optional || (answer !== '' && answer !== null && answer !== undefined)
+  const goForward = useCallback(() => {
+    const next = getNextIndex(current, answers)
+    if (next !== current) {
+      setDirection('forward')
+      setCurrent(next)
+    }
+  }, [current, answers])
 
-  const go = useCallback(
-    (dir) => {
-      setDirection(dir)
-      if (dir === 'forward') setCurrent((c) => Math.min(c + 1, TOTAL - 1))
-      else setCurrent((c) => Math.max(c - 1, 0))
-    },
-    [],
-  )
+  const goBack = useCallback(() => {
+    const prev = getPrevIndex(current, answers)
+    if (prev !== current) {
+      setDirection('back')
+      setCurrent(prev)
+    }
+  }, [current, answers])
 
   const handleAnswer = useCallback((id, value) => {
     setAnswers((prev) => ({ ...prev, [id]: value }))
   }, [])
 
+  // For multiple-choice: update answer then auto-advance
   const handleAutoAdvance = useCallback(
     (id, value) => {
-      setAnswers((prev) => ({ ...prev, [id]: value }))
-      if (!isLast) {
+      const updated = { ...answers, [id]: value }
+      setAnswers(updated)
+      const next = getNextIndex(current, updated)
+      if (next !== current) {
         setTimeout(() => {
           setDirection('forward')
-          setCurrent((c) => c + 1)
+          setCurrent(next)
         }, 280)
       }
     },
-    [isLast],
+    [current, answers],
   )
 
   const handleSubmit = async () => {
@@ -58,7 +109,7 @@ export default function App() {
       })
       if (!res.ok) throw new Error('Submission failed')
       setSubmitted(true)
-    } catch (err) {
+    } catch {
       setError('Something went wrong. Please try again.')
     } finally {
       setSubmitting(false)
@@ -67,55 +118,65 @@ export default function App() {
 
   if (submitted) return <ThankYou />
 
+  const visibleTotal = getVisibleCount(answers)
+  const visiblePos = getVisiblePosition(current, answers)
+
   return (
     <div className="app">
-      <ProgressBar current={current} total={TOTAL} />
+      {question.type !== 'welcome' && (
+        <ProgressBar current={visiblePos - 1} total={visibleTotal - 1} />
+      )}
 
       <div className="form-area">
         <Step
           key={current}
           question={question}
-          answer={answer}
+          answers={answers}
           direction={direction}
           onChange={handleAnswer}
           onAutoAdvance={handleAutoAdvance}
+          onNext={goForward}
         />
 
-        <nav className="nav">
-          <button
-            className="btn btn--ghost"
-            onClick={() => go('back')}
-            disabled={current === 0}
-            aria-label="Previous question"
-          >
-            Back
-          </button>
+        {question.type !== 'welcome' && (
+          <nav className="nav">
+            <button
+              className="btn btn--ghost"
+              onClick={goBack}
+              disabled={current === 0}
+              aria-label="Previous question"
+            >
+              Back
+            </button>
 
-          {isLast ? (
-            <button
-              className="btn btn--primary"
-              onClick={handleSubmit}
-              disabled={submitting || (!canAdvance)}
-            >
-              {submitting ? 'Sending…' : 'Submit'}
-            </button>
-          ) : (
-            <button
-              className="btn btn--primary"
-              onClick={() => go('forward')}
-              disabled={!canAdvance}
-            >
-              Next
-            </button>
-          )}
-        </nav>
+            {isLast ? (
+              <button
+                className="btn btn--primary"
+                onClick={handleSubmit}
+                disabled={submitting || !canAdvance}
+              >
+                {submitting ? 'Sending…' : 'Submit'}
+              </button>
+            ) : (
+              <button
+                className="btn btn--primary"
+                onClick={goForward}
+                disabled={!canAdvance}
+              >
+                Next
+              </button>
+            )}
+          </nav>
+        )}
 
         {error && <p className="error-msg">{error}</p>}
       </div>
 
-      <footer className="form-footer">
-        {current + 1} / {TOTAL}
-      </footer>
+      {question.type !== 'welcome' && (
+        <footer className="form-footer">
+          {visiblePos - 1} / {visibleTotal - 1}
+        </footer>
+      )}
     </div>
   )
 }
