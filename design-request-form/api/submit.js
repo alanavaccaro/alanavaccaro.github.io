@@ -23,9 +23,11 @@ export default async function handler(req, res) {
     // existing website branch
     websiteUrl,
     currentPlatform,
+    currentPlatformOther,
     keepPlatform,
     // no website branch
     preferredPlatform,
+    preferredPlatformOther,
     platformBudget,
     // shared
     purpose,
@@ -55,9 +57,9 @@ export default async function handler(req, res) {
     businessDescription ?? '',
     hasWebsite        ?? '',
     websiteUrl        ?? '',
-    currentPlatform   ?? '',
+    currentPlatform === 'Other' ? (currentPlatformOther ?? '') : (currentPlatform ?? ''),
     keepPlatform      ?? '',
-    preferredPlatform ?? '',
+    preferredPlatform === 'Other' ? (preferredPlatformOther ?? '') : (preferredPlatform ?? ''),
     platformBudget    ?? '',
     purpose           ?? '',
     style             ?? '',
