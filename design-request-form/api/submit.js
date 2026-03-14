@@ -32,6 +32,7 @@ export default async function handler(req, res) {
     style,
     inspiration,
     brandAssets,
+    additionalInfo,
   } = req.body ?? {}
 
   const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n')
@@ -62,13 +63,14 @@ export default async function handler(req, res) {
     style             ?? '',
     inspiration       ?? '',
     brandAssets       ?? '',
+    additionalInfo    ?? '',
     '',  // Notes — blank, for your use
   ]
 
   try {
     await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID,
-      range: 'Sheet1!A:P',
+      range: 'Sheet1!A:Q',
       valueInputOption: 'USER_ENTERED',
       insertDataOption: 'INSERT_ROWS',
       requestBody: { values: [row] },

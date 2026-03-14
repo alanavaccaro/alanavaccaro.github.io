@@ -122,4 +122,13 @@ export const QUESTIONS = [
     type: 'choice',
     options: ['Yes, I have everything', 'Partially', 'No, starting from scratch'],
   },
+  {
+    id: 'additionalInfo',
+    label: 'Anything else I should know?',
+    sublabel: 'Goals, constraints, timeline, budget — anything that feels relevant.',
+    type: 'text',
+    multiline: true,
+    placeholder: 'Share whatever comes to mind…',
+    optional: true,
+  },
 ]
