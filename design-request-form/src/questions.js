@@ -1,0 +1,55 @@
+export const QUESTIONS = [
+  {
+    id: 'projectType',
+    label: 'What kind of project is this?',
+    type: 'choice',
+    options: ['New website', 'Redesign', 'Landing page', 'Other'],
+  },
+  {
+    id: 'pageCount',
+    label: 'How many pages are you thinking?',
+    type: 'choice',
+    options: ['1', '2–4', '5–10', 'Not sure yet'],
+  },
+  {
+    id: 'timeline',
+    label: 'Do you have a timeline in mind?',
+    type: 'choice',
+    options: ['ASAP', '1–2 months', '3+ months', 'Flexible'],
+  },
+  {
+    id: 'budget',
+    label: "What's your approximate budget?",
+    type: 'choice',
+    options: ['Under $3k', '$3k–$7k', '$7k–$15k', '$15k+'],
+  },
+  {
+    id: 'brandAssets',
+    label: 'Do you have brand assets ready? (logo, fonts, colors)',
+    type: 'choice',
+    options: ['Yes, all set', 'Partially', 'No, starting fresh'],
+  },
+  {
+    id: 'copyReady',
+    label: 'Do you have copy ready?',
+    type: 'choice',
+    options: ["Yes", "No, I'll need help", 'Partially'],
+  },
+  {
+    id: 'inspiration',
+    label: 'Share any inspiration links',
+    sublabel: 'Websites, Dribbble, Behance, etc. — totally optional.',
+    type: 'text',
+    optional: true,
+    multiline: true,
+    placeholder: 'Paste links here, one per line',
+  },
+  {
+    id: 'anythingElse',
+    label: 'Anything else I should know?',
+    type: 'text',
+    optional: true,
+    multiline: true,
+    placeholder: 'Share whatever feels relevant — goals, constraints, context…',
+  },
+]
