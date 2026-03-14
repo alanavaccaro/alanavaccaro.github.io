@@ -5,8 +5,7 @@ export default function ThankYou() {
         <span className="thankyou__mark">✓</span>
         <h1 className="thankyou__heading">You're all set.</h1>
         <p className="thankyou__body">
-          Thanks for reaching out — I'll review your details and be in touch
-          within <strong>2 business days</strong>.
+          Thanks for reaching out — I'll get back to you as soon as I can.
         </p>
       </div>
     </div>
