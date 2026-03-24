@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lasso Top — Rodeo Goods</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --cream: #ede9e2;
+    --black: #111;
+    --gray-img: #c8c4bc;
+    --text-sm: 12px;
+    --text-xs: 12px;
+  }
+  body {
+    background: var(--cream);
+    color: var(--black);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: var(--text-sm);
+    letter-spacing: 0.01em;
+  }
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    font-size: var(--text-sm);
+    border-bottom: 1px solid #d4d0c8;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--black);
+  }
+  .nav-logo {
+    width: 80px;
+    height: 22px;
+    background: var(--gray-img);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    color: #888;
+    text-transform: uppercase;
+  }
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    padding: 10px 14px;
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 0.03em;
+  }
+  .breadcrumb a { text-decoration: none; color: #999; }
+  .breadcrumb span { margin: 0 5px; }
+  /* ── PRODUCT LAYOUT ── */
+  .product-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: #d4d0c8;
+    border-top: 1px solid #d4d0c8;
+  }
+  /* ── IMAGE SIDE ── */
+  .image-side {
+    background: var(--cream);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .main-img {
+    flex: 1;
+    background: var(--gray-img);
+    background-size: cover;
+    background-position: center top;
+    transition: background-image 0.25s ease;
+    cursor: zoom-in;
+  }
+  .thumb-row {
+    display: flex;
+    gap: 1px;
+    background: #d4d0c8;
+    border-top: 1px solid #d4d0c8;
+  }
+  .thumb {
+    flex: 1;
+    aspect-ratio: 1/1;
+    background: var(--gray-img);
+    background-size: cover;
+    background-position: center top;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+  }
+  .thumb:hover, .thumb.active-thumb { opacity: 1; }
+  /* ── INFO SIDE ── */
+  .info-side {
+    background: var(--cream);
+    padding: 28px 24px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .product-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 6px;
+  }
+  .product-title {
+    font-family: 'IM Fell English', serif;
+    font-size: 32px;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .product-price-line {
+    font-size: var(--text-sm);
+    color: #555;
+    margin-bottom: 24px;
+  }
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid #d4d0c8;
+    margin: 20px 0;
+  }
+  /* Colour */
+  .section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #999;
+    margin-bottom: 8px;
+  }
+  .colour-name {
+    font-size: var(--text-sm);
+    margin-bottom: 10px;
+    color: var(--black);
+  }
+  .colour-options {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .colour-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+    outline: none;
+  }
+  .colour-btn:hover { transform: scale(1.1); }
+  .colour-btn.active { border-color: var(--black); }
+  /* Size */
+  .size-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 24px;
+  }
+  .size-btn {
+    background: none;
+    border: 1px solid #ccc;
+    font-family: inherit;
+    font-size: var(--text-xs);
+    color: #555;
+    padding: 5px 12px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.15s;
+  }
+  .size-btn:hover { border-color: var(--black); color: var(--black); }
+  .size-btn.active { background: var(--black); border-color: var(--black); color: var(--cream); }
+  .size-btn.sold-out { color: #bbb; border-color: #e0ddd8; text-decoration: line-through; cursor: default; }
+  /* Add to cart */
+  .add-btn {
+    width: 100%;
+    background: var(--black);
+    color: var(--cream);
+    border: none;
+    font-family: inherit;
+    font-size: var(--text-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 8px;
+  }
+  .add-btn:hover { background: #333; }
+  .coming-soon-note {
+    font-size: 10px;
+    color: #999;
+    text-align: center;
+    letter-spacing: 0.05em;
+    margin-bottom: 20px;
+  }
+  /* Description */
+  .product-desc {
+    font-size: var(--text-xs);
+    line-height: 1.8;
+    color: #444;
+    margin-bottom: 6px;
+  }
+  /* Details accordion */
+  .detail-row {
+    border-top: 1px solid #d4d0c8;
+    padding: 12px 0;
+  }
+  .detail-row:last-child { border-bottom: 1px solid #d4d0c8; }
+  .detail-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: var(--text-xs);
+    letter-spacing: 0.03em;
+    color: var(--black);
+    user-select: none;
+  }
+  .detail-toggle .icon {
+    font-size: 16px;
+    font-weight: 300;
+    color: #999;
+    transition: transform 0.2s;
+  }
+  .detail-body {
+    display: none;
+    font-size: 11px;
+    line-height: 1.8;
+    color: #666;
+    padding-top: 10px;
+  }
+  .detail-row.open .detail-body { display: block; }
+  .detail-row.open .icon { transform: rotate(45deg); }
+  /* ── FULL-WIDTH IMAGE STRIP ── */
+  .full-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: #d4d0c8;
+    border-top: 1px solid #d4d0c8;
+  }
+  .strip-img {
+    aspect-ratio: 3/4;
+    background: var(--gray-img);
+    background-size: cover;
+    background-position: center top;
+  }
+  /* ── YOU MAY ALSO LIKE ── */
+  .also-like {
+    padding: 40px 14px 0;
+  }
+  .also-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 16px;
+  }
+  .also-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: #d4d0c8;
+    border: 1px solid #d4d0c8;
+  }
+  .also-card {
+    background: var(--cream);
+    padding: 16px;
+  }
+  .also-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: var(--gray-img);
+    background-size: cover;
+    background-position: center top;
+    margin-bottom: 8px;
+  }
+  .also-name { font-size: var(--text-xs); color: #333; }
+  .also-color { font-size: 11px; color: #999; }
+  .also-price { font-size: var(--text-xs); color: #555; margin-top: 2px; }
+  /* ── FOOTER ── */
+  footer {
+    padding: 14px 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-top: 1px solid #d0ccc4;
+    margin-top: 40px;
+  }
+  .footer-left {
+    font-size: var(--text-xs);
+    line-height: 1.7;
+    color: #555;
+  }
+  .footer-left .tagline { font-style: italic; margin-bottom: 8px; }
+  .footer-left input {
+    background: none;
+    border: none;
+    border-bottom: 1px solid #999;
+    outline: none;
+    font-size: var(--text-xs);
+    width: 130px;
+    padding: 1px 0;
+    color: var(--black);
+    font-family: inherit;
+    display: block;
+    margin-top: 2px;
+  }
+  .footer-left input::placeholder { color: #999; }
+  .footer-right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 20px;
+    font-size: var(--text-xs);
+    line-height: 1.9;
+  }
+  .footer-right a { text-decoration: none; color: #555; display: block; }
+  .footer-col-head { color: #999; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+<!-- NAV -->
+<nav>
+  <a href="#">Shop</a>
+  <div class="nav-logo">Logo</div>
+  <a href="#">Bag</a>
+</nav>
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="#">Shop</a><span>→</span><a href="#">Tops</a><span>→</span>Lasso Top
+</div>
+<!-- PRODUCT -->
+<div class="product-layout">
+  <!-- IMAGE SIDE -->
+  <div class="image-side">
+    <div class="main-img" id="mainImg"
+      style="background-image:url('https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09746.jpg?width=1946');">
+    </div>
+    <div class="thumb-row">
+      <div class="thumb active-thumb" data-full="https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09746.jpg?width=1946"
+        style="background-image:url('https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09746.jpg?width=416');"></div>
+      <div class="thumb" data-full="https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09728.jpg?width=1946"
+        style="background-image:url('https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09728.jpg?width=416');"></div>
+      <div class="thumb" data-full="https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09733.jpg?width=1946"
+        style="background-image:url('https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09733.jpg?width=416');"></div>
+      <div class="thumb" data-full="https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09747.jpg?width=1946"
+        style="background-image:url('https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09747.jpg?width=416');"></div>
+    </div>
+  </div>
+  <!-- INFO SIDE -->
+  <div class="info-side">
+    <div class="product-label">Rodeo Goods</div>
+    <div class="product-title" id="productTitle">Lasso Top</div>
+    <div class="product-price-line">€69,00 EUR</div>
+    <hr class="divider">
+    <!-- COLOUR -->
+    <div class="section-label">Colour</div>
+    <div class="colour-name" id="colourName">Black</div>
+    <div class="colour-options">
+      <button class="colour-btn active" style="background:#1a1a1a;" title="Black"
+        data-name="Black"
+        data-img="https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09746.jpg?width=1946"
+        data-thumbs='["https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09746.jpg?width=416","https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09728.jpg?width=416","https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09733.jpg?width=416","https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09747.jpg?width=416"]'
+      ></button>
+      <button class="colour-btn" style="background:#7a5c42;" title="Brown"
+        data-name="Brown"
+        data-img="https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09817_ryan_scardigli.jpg?width=1946"
+        data-thumbs='["https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09817_ryan_scardigli.jpg?width=416","https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09800_ryan_scardigli.jpg?width=416","https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09728.jpg?width=416","https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09733.jpg?width=416"]'
+      ></button>
+      <button class="colour-btn" style="background:#c0392b;" title="Red"
+        data-name="Red"
+        data-img="https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09634.jpg?width=1946"
+        data-thumbs='["https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09634.jpg?width=416","https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09616.jpg?width=416","https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09728.jpg?width=416","https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09733.jpg?width=416"]'
+      ></button>
+    </div>
+    <!-- SIZE -->
+    <div class="section-label">Size</div>
+    <div class="size-options">
+      <button class="size-btn sold-out">XXS</button>
+      <button class="size-btn sold-out">XS</button>
+      <button class="size-btn">S</button>
+      <button class="size-btn">M</button>
+      <button class="size-btn">L</button>
+      <button class="size-btn sold-out">XL</button>
+    </div>
+    <button class="add-btn">Add to cart</button>
+    <div class="coming-soon-note">Coming soon — taxes included</div>
+    <hr class="divider">
+    <p class="product-desc">A classic string triangle top with adjustable ties at the back and neck. Cut from a sculpting fabric with durable elastic to stay in place and move with you. Loops at the end of the neck ties can be used to connect to the back straps.</p>
+    <p class="product-desc" style="margin-top:8px;font-style:italic;color:#888;">Timeless shape. Elevated feel.</p>
+    <p class="product-desc" style="margin-top:4px;font-size:11px;color:#aaa;">Asya is 173 cm and wears size S.</p>
+    <hr class="divider">
+    <!-- ACCORDION -->
+    <div class="detail-row open">
+      <div class="detail-toggle" onclick="toggleDetail(this)">
+        <span>Materials</span><span class="icon">+</span>
+      </div>
+      <div class="detail-body">
+        Made with premium Italian fabric — soft, durable and sculpting.<br>
+        78% ECONYL® nylon, 22% Lycra Xtra Life
+      </div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-toggle" onclick="toggleDetail(this)">
+        <span>Care</span><span class="icon">+</span>
+      </div>
+      <div class="detail-body">
+        Hand wash cold. Do not bleach. Do not iron.<br>
+        Do not tumble dry. Do not dry clean.
+      </div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-toggle" onclick="toggleDetail(this)">
+        <span>Shipping & Returns</span><span class="icon">+</span>
+      </div>
+      <div class="detail-body">
+        Free shipping on orders over €100.<br>
+        Returns accepted within 14 days of delivery, unworn and with tags attached.
+      </div>
+    </div>
+  </div>
+</div>
+<!-- FULL-WIDTH IMAGE STRIP -->
+<div class="full-strip">
+  <div class="strip-img" style="background-image:url('https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09728.jpg?width=1946');"></div>
+  <div class="strip-img" style="background-image:url('https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09733.jpg?width=1946');"></div>
+</div>
+<!-- YOU MAY ALSO LIKE -->
+<div class="also-like">
+  <div class="also-label">You may also like</div>
+  <div class="also-grid">
+    <div class="also-card">
+      <div class="also-img" style="background-image:url('https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09747.jpg?width=533');"></div>
+      <div class="also-name">Lasso Bottom</div>
+      <div class="also-color">Black</div>
+      <div class="also-price">€69</div>
+    </div>
+    <div class="also-card">
+      <div class="also-img" style="background-image:url('https://rodeogoods.com/cdn/shop/files/RodeoProductWeb-09854_ryan_scardigli.jpg?width=533');"></div>
+      <div class="also-name">Outlaw Top</div>
+      <div class="also-color">Black</div>
+      <div class="also-price">€69</div>
+    </div>
+  </div>
+</div>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="tagline">For the open water.</div>
+    <input type="email" placeholder="Enter email address">
+    <div style="margin-top:4px;color:#aaa;">Subscribe · unsubscribe anytime</div>
+  </div>
+  <div class="footer-right">
+    <div>
+      <div class="footer-col-head">Explore</div>
+      <a href="#">Instagram</a>
+      <a href="#">FAQ</a>
+      <a href="#">Contact</a>
+      <a href="#">Stockists</a>
+    </div>
+    <div>
+      <div class="footer-col-head">Shop</div>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Shipping</a>
+    </div>
+  </div>
+</footer>
+<script>
+  // Thumbnails
+  document.querySelectorAll('.thumb').forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active-thumb'));
+      thumb.classList.add('active-thumb');
+      document.getElementById('mainImg').style.backgroundImage = `url('${thumb.dataset.full}')`;
+    });
+  });
+  // Colour switcher
+  document.querySelectorAll('.colour-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.colour-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('colourName').textContent = btn.dataset.name;
+      document.getElementById('mainImg').style.backgroundImage = `url('${btn.dataset.img}')`;
+      // Update thumbs
+      const thumbs = JSON.parse(btn.dataset.thumbs);
+      const thumbEls = document.querySelectorAll('.thumb');
+      thumbEls.forEach((t, i) => {
+        if (thumbs[i]) {
+          t.style.backgroundImage = `url('${thumbs[i]}')`;
+          t.dataset.full = thumbs[i].replace('width=416', 'width=1946');
+        }
+      });
+      thumbEls.forEach(t => t.classList.remove('active-thumb'));
+      thumbEls[0].classList.add('active-thumb');
+    });
+  });
+  // Size selector
+  document.querySelectorAll('.size-btn:not(.sold-out)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  // Accordion
+  function toggleDetail(toggle) {
+    const row = toggle.closest('.detail-row');
+    row.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
