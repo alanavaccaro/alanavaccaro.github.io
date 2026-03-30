@@ -1,0 +1,95 @@
+---
+layout: base.njk
+pageTitle: Sean Lucey
+permalink: /
+---
+
+{# ── NAV ── #}
+<nav>
+  <a href="/" class="nav-name" style="opacity:1">{{ site.title }}</a>
+  <div class="nav-center">
+    <button class="nav-tab" id="tabFilm" onclick="setMode('film')">Motion</button>
+    <span class="nav-sep">—</span>
+    <button class="nav-tab dim" id="tabPhoto" onclick="setMode('photo')">Still</button>
+  </div>
+  <div class="nav-right">
+    <a href="/about/" class="nav-link">About</a>
+  </div>
+</nav>
+
+{# ── HERO ── #}
+{% set heroYtId = site.heroVideoUrl | ytid %}
+<section class="hero">
+  <div class="hero-inner">
+    <iframe
+      class="hero-video loaded"
+      src="https://www.youtube.com/embed/{{ heroYtId }}?autoplay=1&mute=1&loop=1&playlist={{ heroYtId }}&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&playsinline=1&enablejsapi=1"
+      title="{{ site.title }} Reel"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+    ></iframe>
+    <div style="position:absolute;inset:0;z-index:3;pointer-events:none;"></div>
+    <img class="hero-photo-cover" src="{{ site.heroPhotoUrl }}" alt="{{ site.title }} — Still">
+  </div>
+  <div class="hero-bottom">
+    <span class="bottom-label" id="heroLabel"></span>
+  </div>
+</section>
+
+{# ── FILM GRID ── #}
+<section class="work film-section" id="filmWork">
+  <div class="grid">
+    {% for project in motion.projects %}
+    {% set ytId = project.youtubeUrl | ytid %}
+    <div class="cell" data-video="{{ project.youtubeUrl }}">
+      <img class="cell-media" src="https://img.youtube.com/vi/{{ ytId }}/maxresdefault.jpg" alt="{{ project.title }}" crossorigin="anonymous">
+      <div class="cell-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{# ── STILL GRID ── #}
+<section class="work photo-section" id="photoWork">
+  <div class="grid still-grid">
+    {% for image in stills.images %}
+    <div class="cell"><img class="cell-media" src="{{ image.url }}" alt="{{ image.title }}"></div>
+    {% endfor %}
+  </div>
+</section>
+
+{# ── VIDEO OVERLAY ── #}
+<div class="overlay" id="overlay">
+  <div class="overlay-bg" id="overlayBg"></div>
+  <div class="overlay-click-catcher" onclick="closeOverlay()"></div>
+  <button class="overlay-close" onclick="closeOverlay()">Close ✕</button>
+  <div class="overlay-video-wrap" id="overlayVideoWrap">
+    <iframe id="overlayIframe" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+  </div>
+</div>
+
+{# ── PHOTO LIGHTBOX ── #}
+<div class="photo-overlay" id="photoOverlay">
+  <div class="photo-overlay-bg" id="photoOverlayBg"></div>
+  <div class="photo-overlay-catcher" onclick="closePhotoOverlay()"></div>
+  <button class="photo-overlay-close" onclick="closePhotoOverlay()">Close ✕</button>
+  <button class="photo-overlay-nav photo-overlay-prev" onclick="photoNav(-1)">←</button>
+  <div class="photo-overlay-img-wrap" id="photoOverlayWrap">
+    <img id="photoOverlayImg" src="" alt="">
+  </div>
+  <button class="photo-overlay-nav photo-overlay-next" onclick="photoNav(1)">→</button>
+  <div class="photo-overlay-counter" id="photoOverlayCounter"></div>
+</div>
+
+{# ── FOOTER ── #}
+<footer id="siteFooter">
+  <div class="footer-inner">
+    <span class="footer-name">{{ site.title }}</span>
+    <div class="footer-links">
+      <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+      <a href="{{ site.instagram }}" target="_blank">{{ site.instagramHandle }}</a>
+    </div>
+    <span class="footer-copy">© {{ "" | currentYear }}</span>
+  </div>
+</footer>

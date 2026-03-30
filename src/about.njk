@@ -1,0 +1,48 @@
+---
+layout: base.njk
+pageTitle: Sean Lucey — About
+bodyClass: about-page
+permalink: /about/
+---
+
+<nav>
+  <a href="/" class="nav-name" style="opacity:1">{{ site.title }}</a>
+  <div class="nav-center">
+    <a href="/" class="nav-link">Motion</a>
+    <span class="nav-sep">—</span>
+    <a href="/" class="nav-link">Still</a>
+  </div>
+  <div class="nav-right">
+    <a href="/about/" class="nav-link active">About</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="about-inner">
+    <div class="about-img-wrap">
+      <img src="{{ about.profilePhoto }}" alt="{{ about.name }}">
+    </div>
+    <div class="about-content">
+      <div class="about-name">{{ about.name }}</div>
+      <div class="about-bio">{{ about.bio | markdownify | safe }}</div>
+      <div class="about-meta">
+        <div class="about-meta-row">
+          <span class="about-meta-label">Based</span>
+          <span class="about-meta-value">{{ about.location }}</span>
+        </div>
+        <div class="about-meta-row">
+          <span class="about-meta-label">Speciality</span>
+          <span class="about-meta-value">{{ about.specialty }}</span>
+        </div>
+        <div class="about-meta-row">
+          <span class="about-meta-label">Available for</span>
+          <span class="about-meta-value">{{ about.availableFor }}</span>
+        </div>
+      </div>
+      <div class="about-contact">
+        <a href="mailto:{{ about.email }}">{{ about.email }}</a>
+        <a href="{{ about.instagram }}" target="_blank">{{ about.instagramHandle }}</a>
+      </div>
+    </div>
+  </div>
+</div>

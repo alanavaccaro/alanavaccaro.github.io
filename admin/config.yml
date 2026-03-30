@@ -1,0 +1,68 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "img/uploads"
+public_folder: "/img/uploads"
+
+collections:
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - name: "site"
+        label: "General"
+        file: "src/_data/site.json"
+        fields:
+          - { label: "Site Title", name: "title", widget: "string" }
+          - { label: "Description", name: "description", widget: "string" }
+          - { label: "Hero Video URL", name: "heroVideoUrl", widget: "string", hint: "YouTube embed URL for the homepage hero" }
+          - { label: "Hero Photo URL", name: "heroPhotoUrl", widget: "string", hint: "Image shown in Still mode hero" }
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "Instagram URL", name: "instagram", widget: "string" }
+          - { label: "Instagram Handle", name: "instagramHandle", widget: "string" }
+
+  - name: "about"
+    label: "About Page"
+    files:
+      - name: "about"
+        label: "About Content"
+        file: "src/_data/about.json"
+        fields:
+          - { label: "Name", name: "name", widget: "string" }
+          - { label: "Bio", name: "bio", widget: "markdown" }
+          - { label: "Profile Photo", name: "profilePhoto", widget: "image", hint: "Upload or paste a URL" }
+          - { label: "Location", name: "location", widget: "string" }
+          - { label: "Specialty", name: "specialty", widget: "string" }
+          - { label: "Available For", name: "availableFor", widget: "string" }
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "Instagram URL", name: "instagram", widget: "string" }
+          - { label: "Instagram Handle", name: "instagramHandle", widget: "string" }
+
+  - name: "motion"
+    label: "Motion Projects"
+    files:
+      - name: "motion"
+        label: "Film / Video"
+        file: "src/_data/motion.json"
+        fields:
+          - label: "Projects"
+            name: "projects"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Year", name: "year", widget: "string" }
+              - { label: "YouTube URL", name: "youtubeUrl", widget: "string", hint: "e.g. https://youtu.be/VIDEO_ID" }
+
+  - name: "stills"
+    label: "Still Photography"
+    files:
+      - name: "stills"
+        label: "Photo Gallery"
+        file: "src/_data/stills.json"
+        fields:
+          - label: "Images"
+            name: "images"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Image URL", name: "url", widget: "string", hint: "Google Drive or direct image URL" }

@@ -1,0 +1,10 @@
+{
+  "projects": [
+    { "title": "Project 01", "year": "2025", "youtubeUrl": "https://youtu.be/-UsxINUKkv0" },
+    { "title": "Project 02", "year": "2025", "youtubeUrl": "https://youtu.be/OAZsIko6__A" },
+    { "title": "Project 03", "year": "2025", "youtubeUrl": "https://youtu.be/4f-ZX0fHMiE" },
+    { "title": "Project 04", "year": "2024", "youtubeUrl": "https://youtu.be/caYOWhjKlN0" },
+    { "title": "Project 05", "year": "2024", "youtubeUrl": "https://youtu.be/T0AtPexs0IA" },
+    { "title": "Project 06", "year": "2024", "youtubeUrl": "https://youtu.be/VdX5F8U4yY8" }
+  ]
+}
